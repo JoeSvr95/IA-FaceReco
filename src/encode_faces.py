@@ -7,17 +7,18 @@ import os
 
 # Directorio donde se ubica ESTE archivo
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-image_dir = os.path.join(BASE_DIR, "dataset")
 
 # Parámetro para poder elegir entre 'hog' o 'cnn'
 ap = argparse.ArgumentParser()
+ap.add_argument("-i", "--dataset", required=True,
+    help="ruta hacia el directorio de imágenes")
 ap.add_argument("-d", "--detection-method", type=str, default="hog",
     help="modelo de detección de caras a usar: 'hog' o 'cnn'")
 args = vars(ap.parse_args())
 
 # Recoger los paths de las imágenes
 print("[INFO] quantificando caras...")
-imagePaths = list(paths.list_images(image_dir))
+imagePaths = list(paths.list_images(args["dataset"]))
 
 # Inicializando la lista de los encodings conocidos y nombres
 knownEncodings = []
