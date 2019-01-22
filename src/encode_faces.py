@@ -1,9 +1,14 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 from imutils import paths
+from PIL import Image
 import face_recognition
 import argparse
 import pickle
 import cv2
 import os
+import numpy as np
 
 # Directorio donde se ubica ESTE archivo
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -30,8 +35,13 @@ for (i, imagePath) in enumerate(imagePaths):
     print("[INFO] procesando imagen {}/{}".format(i + 1, len(imagePaths)))
     name = imagePath.split(os.path.sep)[-2]
 
+    print(imagePath)
+    
     # Cargar la imagen input y convertira de BGR a dlib RGB
-    image = cv2.imread(imagePath)
+    stream = open(imagePath, 'rb')
+    bytes = bytearray(stream.read())
+    numpyarray = np.asarray(bytes, dtype=np.uint8)
+    image = cv2.imdecode(numpyarray, cv2.IMREAD_UNCHANGED)
     rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
     # Detectar las coordenadas (x, y) de los bounding boxes
@@ -55,3 +65,4 @@ data = {"encodings": knownEncodings, "names": knownNames}
 f = open("encodings.pickle", 'wb')
 f.write(pickle.dumps(data))
 f.close
+print("Archivo con los encodigns creado!")

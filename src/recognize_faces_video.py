@@ -52,7 +52,7 @@ while True:
             # Iterar sobre los indices que hicieron match y mantener un contador
             # por cada cara reconocida
             for i in matchedIndxs:
-                name = data["names"][i].replace("-", " ").lower()
+                name = data["names"][i]
                 counts[name] = counts.get(name, 0) + 1
 
             # Determinar la cara reconocida con la mayor cantidad de votos

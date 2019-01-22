@@ -46,7 +46,7 @@ for encoding in encodings:
 
         # Iterar sobre los indeces de matches
         for i in matchedIndxs:
-            name = data["names"][i].replace("-", " ").lower()
+            name = data["names"][i]
             counts[name] = counts.get(name, 0) + 1
 
         # Determianr la cara reconocida con el mayor numero de votos
