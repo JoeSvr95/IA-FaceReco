@@ -19,6 +19,12 @@ data = pickle.loads(open("encodings.pickle", 'rb').read())
 image = cv2.imread(args["image"])
 rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
+# Cambiando el tamaño de la ventana
+scale_percent = 60
+width = int(image.shape[1] * scale_percent / 100)
+height = int(image.shape[0] * scale_percent / 100)
+size = (width, height)
+
 # Detectar las coordenadas (x, y) de las cajas delimitadoras
 # que corresponden a cada una de las caras de la imagen de input
 print("[INFO] reconociendo caras...")
@@ -62,5 +68,7 @@ for ((top, right, bottom, left), name) in zip(boxes, names):
     cv2.putText(image, name, (left, y), cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 255, 0), 2)
 
 # Mostrar la imagen
-cv2.imshow("Imagen", image)
+cv2.namedWindow('image', cv2.WINDOW_NORMAL)
+cv2.resizeWindow('image', size)
+cv2.imshow("image", image)
 cv2.waitKey(0)

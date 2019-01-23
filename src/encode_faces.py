@@ -38,11 +38,13 @@ for (i, imagePath) in enumerate(imagePaths):
     print(imagePath)
     
     # Cargar la imagen input y convertira de BGR a dlib RGB
-    stream = open(imagePath, 'rb')
-    bytes = bytearray(stream.read())
-    numpyarray = np.asarray(bytes, dtype=np.uint8)
-    image = cv2.imdecode(numpyarray, cv2.IMREAD_UNCHANGED)
-    rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    scale_percent = 60
+    image = cv2.imread(imagePath)
+    width = int(image.shape[1] * scale_percent / 100)
+    height = int(image.shape[0] * scale_percent / 100)
+    dim = (width, height)
+    resized = cv2.resize(image, dim, interpolation=cv2.INTER_AREA)
+    rgb = cv2.cvtColor(resized, cv2.COLOR_BGR2RGB)
 
     # Detectar las coordenadas (x, y) de los bounding boxes
     # que corresponden a cada una de las caras de las imágenes
