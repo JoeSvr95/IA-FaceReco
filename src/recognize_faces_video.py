@@ -21,6 +21,8 @@ print("[INFO] iniciando camara...")
 vs = VideoStream(src=0).start()
 time.sleep(2.0)
 
+f = 30
+
 while True:
     # Capturando los frames de la cámara
     frame = vs.read()
@@ -28,38 +30,39 @@ while True:
     # Convertir el frame de BGR a RGB y redimencionar para
     # que tenga anchura de 750 px
     rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-    rgb = imutils.resize(frame, width=750)
+    rgb = imutils.resize(frame, width=200)
     r = frame.shape[1] / float(rgb.shape[1])
 
-    # Detectando las coordenadas (x, y) de las cajas delimitadoras
-    # que corresponden a cada una de las caras del frame
-    boxes = face_recognition.face_locations(rgb, model=args["detection_method"])
-    encodings = face_recognition.face_encodings(rgb, boxes)
-    names = []
+    if f % 30 == 0:
+        # Detectando las coordenadas (x, y) de las cajas delimitadoras
+        # que corresponden a cada una de las caras del frame
+        boxes = face_recognition.face_locations(rgb, model=args["detection_method"])
+        encodings = face_recognition.face_encodings(rgb, boxes)
+        names = []
 
-    # Iterando sobre las caras
-    for encoding in encodings:
-        matches = face_recognition.compare_faces(data["encodings"], encoding)
-        name = "Desconocido"
+        # Iterando sobre las caras
+        for encoding in encodings:
+            matches = face_recognition.compare_faces(data["encodings"], encoding)
+            name = "Desconocido"
 
-        # Verificando si encontramos un match
-        if True in matches:
-            # Encontrando todos los indices de las caras encontradas
-            # e inicializar un diccionario que cuente el número total de matches
-            matchedIndxs = [i for (i, b) in enumerate(matches) if b]
-            counts = {}
+            # Verificando si encontramos un match
+            if True in matches:
+                # Encontrando todos los indices de las caras encontradas
+                # e inicializar un diccionario que cuente el número total de matches
+                matchedIndxs = [i for (i, b) in enumerate(matches) if b]
+                counts = {}
 
-            # Iterar sobre los indices que hicieron match y mantener un contador
-            # por cada cara reconocida
-            for i in matchedIndxs:
-                name = data["names"][i]
-                counts[name] = counts.get(name, 0) + 1
+                # Iterar sobre los indices que hicieron match y mantener un contador
+                # por cada cara reconocida
+                for i in matchedIndxs:
+                    name = data["names"][i]
+                    counts[name] = counts.get(name, 0) + 1
 
-            # Determinar la cara reconocida con la mayor cantidad de votos
-            name = max(counts, key=counts.get)
+                # Determinar la cara reconocida con la mayor cantidad de votos
+                name = max(counts, key=counts.get)
 
-        # Actualizando la lista de nombres
-        names.append(name)
+            # Actualizando la lista de nombres
+            names.append(name)
 
     # Iterando sobre las caras reconocidas
     for ((top, right, bottom, left), name) in zip(boxes, names):

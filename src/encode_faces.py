@@ -16,9 +16,9 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 # Parámetro para poder elegir entre 'hog' o 'cnn'
 ap = argparse.ArgumentParser()
 ap.add_argument("-i", "--dataset", required=True,
-    help="ruta hacia el directorio de imágenes")
+    help="Ruta hacia el directorio de imágenes")
 ap.add_argument("-d", "--detection-method", type=str, default="hog",
-    help="modelo de detección de caras a usar: 'hog' o 'cnn'")
+    help="Modelo de detección de caras a usar: 'hog' o 'cnn'")
 args = vars(ap.parse_args())
 
 # Recoger los paths de las imágenes
@@ -38,13 +38,20 @@ for (i, imagePath) in enumerate(imagePaths):
     print(imagePath)
     
     # Cargar la imagen input y convertira de BGR a dlib RGB
-    scale_percent = 60
+    scale_percent = 30 # Porcentaje con el que se reducirá la imagen
     image = cv2.imread(imagePath)
-    width = int(image.shape[1] * scale_percent / 100)
-    height = int(image.shape[0] * scale_percent / 100)
-    dim = (width, height)
-    resized = cv2.resize(image, dim, interpolation=cv2.INTER_AREA)
-    rgb = cv2.cvtColor(resized, cv2.COLOR_BGR2RGB)
+
+    # Validando si la imagen es demasiado grande para analizar
+    width = int(image.shape[1])
+    if width >= 1080:
+        width = int(image.shape[1] * scale_percent / 100) # nueva anchura
+        height = int(image.shape[0] * scale_percent / 100) # nueva altura
+        dim = (width, height) # tupla con la nueva resolución
+
+        resized = cv2.resize(image, dim, interpolation=cv2.INTER_AREA) # Cambiando la resolución por la nueva
+        rgb = cv2.cvtColor(resized, cv2.COLOR_BGR2RGB)
+    else:
+        rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
     # Detectar las coordenadas (x, y) de los bounding boxes
     # que corresponden a cada una de las caras de las imágenes

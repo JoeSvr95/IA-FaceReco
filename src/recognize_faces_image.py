@@ -47,7 +47,7 @@ for encoding in encodings:
         # Encontrar todos los inidces de los matches e inicializar
         # diccionario para contar la cantidad de veces que una cara
         # hizo match
-        matchedIndxs = [i for (i, b) in enumerate(matches) if b]
+        matchedIndxs = [i for (i, match) in enumerate(matches) if match]
         counts = {}
 
         # Iterar sobre los indeces de matches
