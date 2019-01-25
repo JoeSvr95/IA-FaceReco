@@ -38,20 +38,20 @@ for (i, imagePath) in enumerate(imagePaths):
     print(imagePath)
     
     # Cargar la imagen input y convertira de BGR a dlib RGB
-    scale_percent = 30 # Porcentaje con el que se reducirá la imagen
+    if args["detection_method"] == "cnn":
+        scale_percent = 10 # Porcentaje con el que se reducirá la imagen
+    else:
+        scale_percent = 60
+    
     image = cv2.imread(imagePath)
 
     # Validando si la imagen es demasiado grande para analizar
-    width = int(image.shape[1])
-    if width >= 1080:
-        width = int(image.shape[1] * scale_percent / 100) # nueva anchura
-        height = int(image.shape[0] * scale_percent / 100) # nueva altura
-        dim = (width, height) # tupla con la nueva resolución
+    width = int(image.shape[1] * scale_percent / 100) # nueva anchura
+    height = int(image.shape[0] * scale_percent / 100) # nueva altura
+    dim = (width, height) # tupla con la nueva resolución
 
-        resized = cv2.resize(image, dim, interpolation=cv2.INTER_AREA) # Cambiando la resolución por la nueva
-        rgb = cv2.cvtColor(resized, cv2.COLOR_BGR2RGB)
-    else:
-        rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    resized = cv2.resize(image, dim, interpolation=cv2.INTER_AREA) # Cambiando la resolución por la nueva
+    rgb = cv2.cvtColor(resized, cv2.COLOR_BGR2RGB)
 
     # Detectar las coordenadas (x, y) de los bounding boxes
     # que corresponden a cada una de las caras de las imágenes
